@@ -7,8 +7,33 @@ import {
 } from "../lib/db/queries/feed_follows";
 import { readConfig } from "../config";
 import { getUser } from "../lib/db/queries/users";
-
 import { User } from "../lib/db/schema";
+import { deleteFeedFollow } from "../lib/db/queries/feed_follows";
+
+
+export async function handlerUnfollow(
+  cmdName: string,
+  user: User,
+  ...args: string[]
+): Promise<void> {
+
+  if (args.length < 1) {
+    throw new Error("URL is required");
+  }
+
+  const url = args[0];
+
+  const feed = await getFeedByURL(url);
+
+  if (!feed) {
+    throw new Error("Feed not found");
+  }
+
+  await deleteFeedFollow(user.id, feed.id);
+
+  console.log(`Unfollowed ${feed.name}`);
+}
+
 
 export async function handlerFollow(
   cmdName: string,
