@@ -47,3 +47,4 @@ export async function getFeedFollowsForUser(userId: string) {
 
   return result;
 }
+
